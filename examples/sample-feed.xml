@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>PulseForge Example Intelligence Feed</title>
+    <link>https://example.com/</link>
+    <description>Deterministic RSS fixture for connector tests and local experiments.</description>
+    <item>
+      <title>Nebula Cloud expands accelerator capacity</title>
+      <link>https://example.com/news/nebula-capacity</link>
+      <pubDate>Fri, 11 Sep 2026 11:35:00 GMT</pubDate>
+      <description>Nebula Cloud announced a multi-year infrastructure expansion.</description>
+    </item>
+  </channel>
+</rss>

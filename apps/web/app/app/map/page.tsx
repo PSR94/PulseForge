@@ -1,0 +1,2 @@
+import { IntelMap } from "@/components/IntelMap";
+export default function MapPage(){return <><div className="page-head"><div><h1>Geospatial intelligence</h1><p>Event locations are linked back to normalized events and evidence; selecting a region can drive the workspace.</p></div><div className="chips"><span className="chip chip-cyan">EVENTS</span><span className="chip">ENTITIES</span><span className="chip">HEAT</span></div></div><div className="card"><div className="panel-head"><h2>Global event layer</h2><span>4 GEOLOCATED EVENTS</span></div><IntelMap/></div></>}
