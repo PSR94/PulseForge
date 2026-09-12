@@ -1,6 +1,14 @@
 # PulseForge
 
 <p align="center">
+  <img
+    src="docs/images/PulseForge_hero.png"
+    alt="PulseForge — Real-Time AI Event Intelligence Platform"
+    width="100%"
+  />
+</p>
+
+<p align="center">
   <strong>Real-Time AI Event Intelligence Platform</strong><br/>
   Turn continuously changing information into an evidence-linked temporal knowledge graph so users can understand events, relationships, signals, and change over time.
 </p>
