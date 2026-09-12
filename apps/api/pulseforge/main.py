@@ -10,7 +10,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 from pulseforge import __version__
-from pulseforge.api.routes import router
+from pulseforge.api.router import router
 from pulseforge.config import get_settings
 from pulseforge.observability.logging import configure_logging, log_event
 from pulseforge.observability.tracing import configure_tracing
