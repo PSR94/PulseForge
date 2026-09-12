@@ -1,1 +1,17 @@
-export default function SettingsPage(){return <><div className="page-head"><div><h1>Workspace configuration</h1><p>Provider-neutral intelligence settings for the AI Industry Intelligence workspace.</p></div></div><div className="grid-2"><div className="card card-pad"><div className="card-title">AI provider</div><div className="card-value" style={{fontSize:20}}>Mock / Local</div><div className="card-sub">No paid API credentials required. Structured analyst tools remain available.</div></div><div className="card card-pad"><div className="card-title">Trust policy</div><div className="card-value" style={{fontSize:20}}>Evidence-first</div><div className="card-sub">Primary status, corroboration, recency, quotations, confirmations, and contradictions remain separate fields.</div></div><div className="card card-pad"><div className="card-title">Graph model</div><div className="card-value" style={{fontSize:20}}>Temporal relationships</div><div className="card-sub">valid_from / valid_to · confidence · evidence references · strength</div></div><div className="card card-pad"><div className="card-title">Ingestion policy</div><div className="card-value" style={{fontSize:20}}>Bounded + SSRF protected</div><div className="card-sub">Public HTTP(S) only · redirect revalidation · content-type and download limits</div></div></div></>}
+import { api } from "@/lib/api";
+
+export const dynamic="force-dynamic";
+
+export default async function SettingsPage(){
+  const capabilities=await api.capabilities();
+  return <>
+    <div className="page-head"><div><h1>Workspace configuration</h1><p>Runtime capabilities are exposed by the API so operators can distinguish demo mode from durable production mode.</p></div></div>
+    <div className="grid-4">
+      <div className="card card-pad"><div className="card-title">Repository mode</div><div className="card-value">{capabilities.repository_mode}</div></div>
+      <div className="card card-pad"><div className="card-title">AI provider</div><div className="card-value">{capabilities.ai_provider}</div></div>
+      <div className="card card-pad"><div className="card-title">Authentication</div><div className="card-value">{capabilities.auth_mode}</div></div>
+      <div className="card card-pad"><div className="card-title">Demo mode</div><div className="card-value">{String(capabilities.demo_mode)}</div></div>
+    </div>
+    <div className="card card-pad" style={{marginTop:12}}><div className="card-title">Features</div><table className="table"><tbody>{Object.entries(capabilities.features).map(([key,value])=><tr key={key}><td className="code-like">{key}</td><td>{String(value)}</td></tr>)}</tbody></table></div>
+  </>;
+}

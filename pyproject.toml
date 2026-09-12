@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pulseforge"
-version = "0.1.0"
+version = "0.2.0"
 description = "Evidence-linked real-time AI event intelligence platform"
 readme = "README.md"
 requires-python = ">=3.13"
@@ -17,10 +17,16 @@ dependencies = [
   "httpx>=0.28,<1",
   "sqlalchemy>=2.0.43,<3",
   "psycopg[binary]>=3.2.9,<4",
+  "alembic>=1.16,<2",
   "redis>=6.4,<7",
   "nats-py>=2.11,<3",
+  "PyJWT>=2.10,<3",
+  "prometheus-client>=0.22,<1",
+  "fpdf2>=2.8,<3",
+  "python-multipart>=0.0.20,<1",
   "opentelemetry-api>=1.36,<2",
   "opentelemetry-sdk>=1.36,<2",
+  "opentelemetry-exporter-otlp-proto-http>=1.36,<2",
 ]
 
 [project.optional-dependencies]
@@ -29,7 +35,12 @@ dev = [
   "pytest-asyncio>=1.1,<2",
   "pytest-cov>=6.2,<7",
   "ruff>=0.12,<1",
+  "mypy>=1.17,<2",
+  "types-PyJWT>=1.7,<2",
 ]
+
+[project.scripts]
+pulseforge-worker = "pulseforge.workers.intelligence:main"
 
 [tool.setuptools.packages.find]
 where = ["apps/api"]
@@ -38,7 +49,7 @@ include = ["pulseforge*"]
 [tool.pytest.ini_options]
 pythonpath = ["apps/api"]
 testpaths = ["apps/api/tests"]
-addopts = "-ra"
+addopts = "-ra --strict-markers"
 
 [tool.ruff]
 target-version = "py313"
@@ -47,3 +58,12 @@ src = ["apps/api"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "B", "UP", "SIM"]
+ignore = ["B008"]
+
+[tool.mypy]
+python_version = "3.13"
+warn_unused_configs = true
+check_untyped_defs = true
+no_implicit_optional = true
+packages = ["pulseforge"]
+mypy_path = "apps/api"

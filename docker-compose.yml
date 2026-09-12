@@ -15,12 +15,15 @@ services:
 
   redis:
     image: redis:7-alpine
+    command: ["redis-server", "--appendonly", "yes"]
     ports: ["6379:6379"]
+    volumes: ["pulseforge-redis:/data"]
 
   nats:
     image: nats:2-alpine
-    command: ["-js", "-m", "8222"]
+    command: ["-js", "-sd", "/data", "-m", "8222"]
     ports: ["4222:4222", "8222:8222"]
+    volumes: ["pulseforge-nats:/data"]
 
   api:
     build:
@@ -35,7 +38,27 @@ services:
       postgres: { condition: service_healthy }
       redis: { condition: service_started }
       nats: { condition: service_started }
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 10s
+      timeout: 3s
+      retries: 12
     ports: ["8000:8000"]
+
+  worker:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    command: ["python", "-m", "pulseforge.workers.intelligence"]
+    env_file: .env
+    environment:
+      PYTHONPATH: /app/apps/api
+      PULSEFORGE_DATABASE_URL: postgresql+psycopg://pulseforge:pulseforge@postgres:5432/pulseforge
+      PULSEFORGE_REDIS_URL: redis://redis:6379/0
+      PULSEFORGE_NATS_URL: nats://nats:4222
+    depends_on:
+      postgres: { condition: service_healthy }
+      nats: { condition: service_started }
 
   web:
     build:
@@ -44,8 +67,28 @@ services:
     environment:
       NEXT_PUBLIC_PULSEFORGE_API_URL: http://localhost:8000
       PULSEFORGE_SERVER_API_URL: http://api:8000
-    depends_on: [api]
+    depends_on:
+      api: { condition: service_healthy }
     ports: ["3000:3000"]
+
+  prometheus:
+    image: prom/prometheus:v3.5.0
+    profiles: ["observability"]
+    command: ["--config.file=/etc/prometheus/prometheus.yml"]
+    volumes:
+      - ./infra/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    ports: ["9090:9090"]
+    depends_on: [api]
+
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:0.132.0
+    profiles: ["observability"]
+    command: ["--config=/etc/otelcol/config.yaml"]
+    volumes:
+      - ./infra/otel-collector.yaml:/etc/otelcol/config.yaml:ro
+    ports: ["4318:4318", "8889:8889"]
 
 volumes:
   pulseforge-postgres:
+  pulseforge-redis:
+  pulseforge-nats:

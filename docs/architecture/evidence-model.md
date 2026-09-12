@@ -1,7 +1,27 @@
-# Evidence model
+# Evidence and epistemic model
 
-Every extracted claim points to one or more `EvidenceRef` records. Evidence stores the source id, document id, excerpt, publication time, retrieval time, and canonical URL. Claims carry extraction confidence but are not truth values.
+PulseForge keeps five concepts separate:
 
-Contradictions are first-class objects linking incompatible claims about a normalized `(subject, property)` pair. Resolution is explicit and may remain unresolved.
+```mermaid
+flowchart LR
+    F[Fact-like observation] --> C[Claim]
+    C --> E[Evidence excerpt]
+    C --> I[Inference]
+    I --> P[Prediction]
+    E --> S[Original source]
+```
 
-Analyst responses return `citations` that refer to claim, event, signal, or evidence identifiers. The UI can traverse those identifiers back to original source metadata.
+A **claim** is something a source states. Storing a claim does not make it true. An **evidence reference**
+records the source, document, excerpt, publication time, retrieval time and canonical URL that supports
+inspection of that claim.
+
+A **contradiction** exists when two stored claims have the same normalized subject/property but
+incompatible normalized values. PulseForge preserves both and exposes source recency and observable
+reliability dimensions rather than silently selecting a winner.
+
+AI answers use the labels `fact`, `inference`, or `prediction`. The local analyst defaults to
+`inference` and returns citations to event, signal, claim, evidence or relationship IDs.
+
+Source reliability is not collapsed into a single truth score. The data model tracks observable
+properties such as primary/secondary status, publication history, independent confirmations, direct
+quotations and contradiction count.

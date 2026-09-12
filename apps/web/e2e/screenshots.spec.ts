@@ -1,12 +1,23 @@
-import { test } from "@playwright/test";
-import { resolve } from "node:path";
+import fs from "node:fs";
+import path from "node:path";
+import { expect, test } from "@playwright/test";
 
-const output = resolve(process.cwd(), "../../docs/assets");
+const imageDir=path.resolve(process.cwd(),"../../docs/images");
 
-for (const [name, path] of [["workspace", "/app"], ["graph", "/app/graph"], ["event", "/app/events/evt-forgelm-schedule"]] as const) {
-  test(`capture ${name} screenshot`, async ({ page }) => {
-    await page.goto(path);
-    await page.setViewportSize({ width: 1600, height: 1000 });
-    await page.screenshot({ path: resolve(output, `${name}.png`), fullPage: true });
-  });
-}
+test.beforeAll(()=>fs.mkdirSync(imageDir,{recursive:true}));
+
+test("capture real PulseForge product screens", async ({ page }) => {
+  await page.setViewportSize({width:1440,height:1000});
+
+  await page.goto("/app");
+  await expect(page.getByRole("heading",{name:"Intelligence overview"})).toBeVisible();
+  await page.screenshot({path:path.join(imageDir,"overview.png"),fullPage:true});
+
+  await page.goto("/app/compare");
+  await expect(page.getByRole("heading",{name:"What changed?"})).toBeVisible();
+  await page.screenshot({path:path.join(imageDir,"graph-diff.png"),fullPage:true});
+
+  await page.goto("/app/events/evt-nvidia-platform");
+  await expect(page.getByText("Evidence explorer")).toBeVisible();
+  await page.screenshot({path:path.join(imageDir,"event-evidence.png"),fullPage:true});
+});

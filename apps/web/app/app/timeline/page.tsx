@@ -1,2 +1,12 @@
-import { events } from "@/lib/demo";
-export default function TimelinePage(){return <><div className="page-head"><div><h1>Event timeline</h1><p>Zoomable concept surface for events, entity appearances, relationship changes, and anomalies.</p></div><div className="chips"><span className="chip chip-cyan">24 HOURS</span><span className="chip">7 DAYS</span><span className="chip">30 DAYS</span></div></div><div className="card card-pad"><div className="timeline">{[...events].reverse().map(event=><div className="timeline-item" key={event.id}><div className="timeline-time">SEP 11 · {event.time} UTC</div><h3>{event.title}</h3><p>{event.explanation}</p><div className="chips"><span className="chip">{event.type}</span>{event.entities.map(entity=><span className="chip" key={entity}>{entity}</span>)}</div></div>)}</div></div></>}
+import Link from "next/link";
+import { api } from "@/lib/api";
+
+export const dynamic="force-dynamic";
+
+export default async function TimelinePage(){
+  const events=(await api.feed()).slice().sort((a,b)=>new Date(a.first_observed).getTime()-new Date(b.first_observed).getTime());
+  return <>
+    <div className="page-head"><div><h1>Event timeline</h1><p>Temporal sequence of normalized event clusters and evidence-bearing changes.</p></div><div className="chips"><span className="chip">hours</span><span className="chip">days</span><span className="chip">weeks</span><span className="chip">months</span></div></div>
+    <div className="card timeline-list">{events.map(event=><div className="timeline-item" key={event.id}><div className="timeline-dot"/><div className="timestamp">{new Date(event.first_observed).toLocaleString()}</div><div><Link href={`/app/events/${event.id}`} className="event-title">{event.title}</Link><div className="event-explain">{event.explanation}</div></div></div>)}</div>
+  </>;
+}

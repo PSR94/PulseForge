@@ -1,4 +1,14 @@
-import { GitCompareArrows } from "lucide-react";
+import { api } from "@/lib/api";
 import { GraphCanvas } from "@/components/GraphCanvas";
+import { GraphDiffPanel } from "@/components/GraphDiffPanel";
 
-export default function GraphPage(){ return <><div className="page-head"><div><h1>Temporal knowledge graph</h1><p>Relationships are time-valid evidence objects, not timeless edges.</p></div><button className="button-secondary"><GitCompareArrows size={14}/> Aug 1 → Sep 11</button></div><div className="card"><div className="panel-head"><h2>Graph · Sep 11, 15:40 UTC</h2><span>7 ENTITIES · 5 ACTIVE RELATIONSHIPS</span></div><GraphCanvas/></div><div className="card" id="diff" style={{marginTop:12}}><div className="panel-head"><h2>Temporal Graph Diff</h2><span>SEP 10 15:40 → SEP 11 15:40</span></div><div className="diff-grid"><div className="diff-col"><h3>+ New</h3><div className="diff-item diff-plus">NVIDIA PARTNERS_WITH Nebula Cloud</div><div className="diff-item diff-plus">Nebula Cloud TESTS Helix-2</div><div className="diff-item diff-plus">Quartz ADVANCES Inference Efficiency</div></div><div className="diff-col"><h3>~ Movement</h3><div className="diff-item diff-change">NVIDIA activity +470%</div><div className="diff-item diff-change">Inference Efficiency emerging</div><div className="diff-item">4 normalized events join cluster</div></div><div className="diff-col"><h3>⚠ Uncertainty</h3><div className="diff-item diff-warn">ForgeLM 3 launch-date contradiction</div><div className="diff-item">No claim auto-selected as truth</div></div></div></div></> }
+export const dynamic="force-dynamic";
+
+export default async function GraphPage(){
+  const [graph,diff]=await Promise.all([api.graph(),api.diff("2026-09-10T15:40:00Z","2026-09-11T15:40:00Z")]);
+  return <>
+    <div className="page-head"><div><h1>Temporal knowledge graph</h1><p>Relationships are validity-bounded and evidence-linked; the graph is never modeled as timeless.</p></div><span className="chip">{graph.snapshot.relationships.length} active edges</span></div>
+    <div className="card"><GraphCanvas entities={graph.entities} relationships={graph.snapshot.relationships}/></div>
+    <div style={{marginTop:12}}><GraphDiffPanel diff={diff} entities={graph.entities}/></div>
+  </>;
+}

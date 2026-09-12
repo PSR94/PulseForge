@@ -2,13 +2,25 @@
 
 All notable changes to PulseForge are documented here.
 
-## 0.1.0 - 2026-09-11
+## Unreleased
 
 ### Added
-- Evidence-first domain model for sources, documents, entities, events, claims, temporal relationships, contradictions, and signals.
-- Deterministic AI Industry Intelligence demo workspace.
-- Explainable event clustering, entity resolution, signal detection, contradiction exposure, and Temporal Graph Diff.
-- FastAPI API with feed, dossiers, graph, diff, signal, search, analyst, briefing, and SSE endpoints.
-- Dark-first Next.js workspace with command palette and investigation surfaces.
-- RSS connector with SSRF protection and bounded fetching.
-- Backend unit/integration tests, frontend component tests, Playwright journey, Docker Compose, and GitHub Actions CI.
+- Modular RSS, JSON, web-page, GitHub release, arXiv and Hacker News connectors.
+- Deterministic live ingestion materializer that updates events, evidence, entities, observational graph edges and velocity signals.
+- Decomposed FastAPI route modules.
+- SQLAlchemy persistence expansion plus Alembic migration scaffold.
+- Workspace role/JWT primitives and request rate limiting.
+- OpenAI, Azure OpenAI, local OpenAI-compatible and deterministic mock AI provider adapters.
+- Prometheus metrics and OpenTelemetry tracing integration.
+- Watchlist rules, deterministic evaluation and explainable alerts.
+- Markdown, HTML and PDF briefing export.
+- API-backed Next.js event/evidence/entity/graph/diff/signal/source/watchlist/briefing screens.
+- Unified command-palette search.
+- Architecture, processing, evidence, graph, AI, security, deployment and observability documentation.
+- ADRs for graph storage, streaming and evidence-first AI boundaries.
+- CI, CodeQL and real-app screenshot workflows.
+
+### Changed
+- PulseForge version advanced to 0.2.0.
+- The live source ingestion endpoint now advances through materialization to `INDEXED` in local/demo mode.
+- README rebuilt around the real product architecture and end-to-end workflow.

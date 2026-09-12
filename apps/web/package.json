@@ -1,24 +1,28 @@
 {
   "name": "@pulseforge/web",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "test": "vitest",
+    "lint": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "test:e2e": "playwright test",
     "capture:screenshots": "playwright test e2e/screenshots.spec.ts --project=chromium"
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.87.1",
+    "@tanstack/react-table": "^8.21.3",
     "@xyflow/react": "^12.8.4",
     "framer-motion": "^12.23.12",
     "lucide-react": "^0.542.0",
     "maplibre-gl": "^5.7.1",
     "next": "^15.5.2",
     "react": "^19.1.1",
-    "react-dom": "^19.1.1"
+    "react-dom": "^19.1.1",
+    "recharts": "^3.1.2"
   },
   "devDependencies": {
     "@playwright/test": "^1.55.0",

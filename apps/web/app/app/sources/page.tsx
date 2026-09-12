@@ -1,3 +1,13 @@
+import { api } from "@/lib/api";
 import { AddSourceForm } from "@/components/AddSourceForm";
-const sourceRows=[["Orion AI Newsroom","RSS","PRIMARY","0 contradictions"],["Nebula Cloud Newsroom","RSS","PRIMARY","4 confirmations"],["ChipWire","RSS","SECONDARY","11 confirmations"],["ModelBeat","RSS","SECONDARY","1 contradiction"],["Research Dispatch","RSS","SECONDARY","research"],["Open Source Ledger","RSS","SECONDARY","open source"]];
-export default function SourcesPage(){return <><div className="page-head"><div><h1>Source management</h1><p>Observable source properties replace a single opaque “truth score.”</p></div></div><AddSourceForm/><div className="card" style={{marginTop:12}}><div className="panel-head"><h2>Workspace sources</h2><span>6 ACTIVE</span></div>{sourceRows.map(row=><div className="event-row" key={row[0]} style={{gridTemplateColumns:"1fr 100px 100px 140px"}}><strong style={{fontSize:13}}>{row[0]}</strong><span className="chip">{row[1]}</span><span className={row[2]==="PRIMARY"?"fact-label":"chip"}>{row[2]}</span><span className="score">{row[3]}</span></div>)}</div></>}
+import { SourceIngestButton } from "@/components/SourceIngestButton";
+
+export const dynamic="force-dynamic";
+
+export default async function SourcesPage(){
+  const sources=await api.sources();
+  return <>
+    <div className="page-head"><div><h1>Source management</h1><p>RSS, JSON, web pages, GitHub releases, arXiv and Hacker News share one bounded ingestion contract.</p></div></div>
+    <div className="split"><div className="card"><div className="panel-head"><h2>Configured sources</h2><span>{sources.length}</span></div><table className="table"><thead><tr><th>Name</th><th>Type</th><th>Observed reliability properties</th><th/></tr></thead><tbody>{sources.map((source:any)=><tr key={source.id}><td><strong>{source.name}</strong><br/><span className="card-sub">{source.source_url}</span></td><td>{source.source_type}</td><td>{source.observations.primary_source?"primary":"secondary"} · {source.observations.independent_confirmation_count} independent confirmations</td><td><SourceIngestButton sourceId={source.id}/></td></tr>)}</tbody></table></div><AddSourceForm/></div>
+  </>;
+}
